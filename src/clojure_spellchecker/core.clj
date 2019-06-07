@@ -5,20 +5,25 @@
 (def words 
   (set (map str/trim (str/split-lines (slurp ".\\resources\\dictionary.txt")))))
 
-(defn correct? [word] 
+(defn correct? 
+  [word] 
   (contains? words word))
 
-(defn getDistance [word1 word2]
+(defn getDistance 
+  [word1 word2]
   (StringUtils/getLevenshteinDistance word1 word2))
 
-(defn minDistance [word]
+(defn minDistance 
+  [word]
   (apply min-key (partial getDistance word) words))
+
+(defn testWord
+  [word]
+  (if (correct? word)
+      (println "Correct!")
+      (println (str "Did you mean " (minDistance word) "?"))))
+  
 
 (defn -main [& args]
   (let [word (first args)]
-    (if (correct? word)
-      (println "Correct!")
-      (println (str "Did you mean " (minDistance word) "?"))
-    )
-  )
-)
+    (testWord word)))
